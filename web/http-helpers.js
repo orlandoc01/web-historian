@@ -10,6 +10,30 @@ exports.headers = headers = {
   'Content-Type': "text/html"
 };
 
+
+exports.sendResponse = function(res, data, statusCode) {
+  statusCode = statusCode || 200;
+  res.writeHead(statusCode, headers);
+  res.end(data);
+};
+
+exports.collectData = function(req, callback) {
+  var body = "";
+  req.on('data', (chunk) => {body += chunk; });
+  req.on('end', () => {callback(body); });
+};
+
+exports.makeHandler = function(actionMap) {
+  return function(req, resp) {
+    var actionChosen = actionMap[req.method];
+    if(actionChosen) {
+      actionChosen(req, resp);
+    } else {
+      exports.sendResponse(resp, 'Invalid Request' , 404);
+    }
+  };
+};
+
 exports.serveAssets = function(res, asset, callback) {
   // Write some code here that helps serve up your static files!
   // (Static files are things like html (yours or archived from others...),
