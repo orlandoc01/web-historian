@@ -32,7 +32,10 @@ exports.readListOfUrls = function(callback) {
   });
 };
 
-exports.isUrlInList = function() {
+exports.isUrlInList = function(target, callback) {
+  exports.readListOfUrls(function(urls) {
+    callback(urls.indexOf(target) !== -1);
+  });
 };
 
 exports.addUrlToList = function() {
@@ -43,3 +46,9 @@ exports.isUrlArchived = function() {
 
 exports.downloadUrls = function() {
 };
+
+
+
+
+
+
