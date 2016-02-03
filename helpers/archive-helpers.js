@@ -38,7 +38,11 @@ exports.isUrlInList = function(target, callback) {
   });
 };
 
-exports.addUrlToList = function() {
+exports.addUrlToList = function(newUrl, callback) {
+  fs.appendFile(exports.paths.list, newUrl + "\n", function(err) {
+    if (err) throw err;
+    callback();
+  });
 };
 
 exports.isUrlArchived = function() {
