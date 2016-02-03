@@ -19,8 +19,8 @@ exports.sendResponse = function(res, data, statusCode) {
 
 exports.collectData = function(req, callback) {
   var body = "";
-  req.on('data', (chunk) => {body += chunk; });
-  req.on('end', () => {callback(body); });
+  req.on('data', function (chunk) {body += chunk; });
+  req.on('end', function () {callback(body); });
 };
 
 exports.makeHandler = function(actionMap) {

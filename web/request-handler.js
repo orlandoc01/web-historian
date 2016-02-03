@@ -9,7 +9,7 @@ var httpHelpers = require('./http-helpers');
 var rootActions = {
   'GET': function(req, resp) {
     fs.readFile(path.join(archive.paths.siteAssets,"/index.html"),
-     (err, data) => {
+     function (err, data) {
       if(err) {
         console.error(err);
       }
@@ -17,7 +17,11 @@ var rootActions = {
      });
   },
 
-  'POST': function() {},
+  'POST': function(req, res) {
+    httpHelpers.collectData(req, function(data) {
+      console.log(data);
+    });
+  },
 
 };
             
