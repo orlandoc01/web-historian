@@ -45,7 +45,15 @@ exports.addUrlToList = function(newUrl, callback) {
   });
 };
 
-exports.isUrlArchived = function() {
+exports.isUrlArchived = function(target, callback) {
+  fs.access(path.join(exports.paths.archivedSites, target), fs.R_OK | fs.W_OK, function(err) {
+    if(err) {
+      callback(false);
+    } else {
+      callback(true);
+    }
+  });
+  //
 };
 
 exports.downloadUrls = function() {
