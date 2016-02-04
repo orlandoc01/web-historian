@@ -19,7 +19,11 @@ var rootActions = {
 
   'POST': function(req, res) {
     httpHelpers.collectData(req, function(data) {
-      console.log(data);
+      var newURL = data.split('=')[1];
+      archive.addUrlToList(newURL, function() {
+        console.log('added to list');
+        httpHelpers.sendResponse(res, 'Added', 302);
+      });
     });
   },
 
