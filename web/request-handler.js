@@ -2,19 +2,37 @@ var path = require('path');
 var archive = require('../helpers/archive-helpers');
 var fs = require('fs');
 var httpHelpers = require('./http-helpers');
+var url = require('url');
 // require more modules/folders here!
+
+
+//function which maps url to local file
+var routeUrl = function(request) {
+ 
+};
+
+
 
 
 //requests to '/'
 var rootActions = {
   'GET': function(req, resp) {
-    fs.readFile(path.join(archive.paths.siteAssets,"/index.html"),
-     function (err, data) {
-      if(err) {
-        console.error(err);
-      }
-      httpHelpers.sendResponse(resp, data);
-     });
+    var asset;
+    var route = url.parse(req.url).pathname;
+    if (route === '/') {
+       asset = path.join(archive.paths.siteAssets,'/index.html');
+       httpHelpers.serveAssets(resp, asset);
+    } else {
+      var cachedFile = route.slice(1);
+      archive.isUrlArchived(cachedFile, function(found) {
+        if(found) {
+          asset = path.join(archive.paths.archivedSites, cachedFile);
+          httpHelpers.serveAssets(resp, asset); 
+        } else {
+          httpHelpers.sendResponse(resp, 'File not found', 404);
+        }
+      });
+    }
   },
 
   'POST': function(req, res) {
@@ -29,4 +47,4 @@ var rootActions = {
 
 };
             
-exports.handleRootRequest = httpHelpers.makeHandler(rootActions);
+exports.handleRequest = httpHelpers.makeHandler(rootActions);
