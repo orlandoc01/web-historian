@@ -2,6 +2,7 @@ var fs = require('fs');
 var path = require('path');
 var _ = require('underscore');
 var http = require('http');
+var httpHelpers = require('../web/http-helpers.js');
 
 /*
  * You will need to reuse the same paths many times over in the course of this sprint.
@@ -59,23 +60,31 @@ exports.isUrlArchived = function(target, callback) {
 
 exports.downloadUrls = function(urlArray) {
   urlArray.forEach(function(url) {
-    var newFile = fs.createWriteStream(path.join(exports.paths.archivedSites, url));
-    newFile.on('open', function(fd) {
-      //   var options = {
-      //   host: url,
-      //   port: 80,
-      //   path: '/',
-      //   method: 'POST'
-      // };
+    var newFile = fs.open(path.join(exports.paths.archivedSites, url), 'w', function (err, fd) {
 
-      // pageRequest = http.request(options, function(response) {
-      //   htmlData = fs.createReadStream(response);
-      //   htmlData.setEncoding('utf8');
-      //   htmlData.pipe(newFile);
+      var options = {
+        host: url,
+        port: 80,
+        path: '/',
+        // method: 'POST',
+        headers: httpHelpers.headers
+      };
 
-      // });
+      var body = '';
+
+      http.get(options, function(response) {
+        response.setEncoding('utf8');
+        response.on('data', function(chunk) {
+          body += chunk;
+        });
+
+        response.on('end', function() {
+          fs.write(fd, body, 0, 'utf8');
+        });
+
+      });
+  
     });
-    
 
   });
 };
