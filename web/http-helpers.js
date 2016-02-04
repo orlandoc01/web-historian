@@ -1,6 +1,7 @@
 var path = require('path');
 var fs = require('fs');
 var archive = require('../helpers/archive-helpers');
+var _ = require('../node_modules/underscore/underscore-min.js');
 
 exports.headers = headers = {
   "access-control-allow-origin": "*",
@@ -11,9 +12,10 @@ exports.headers = headers = {
 };
 
 
-exports.sendResponse = function(res, data, statusCode) {
+exports.sendResponse = function(res, data, statusCode, headerParams) {
   statusCode = statusCode || 200;
-  res.writeHead(statusCode, headers);
+  var finalHeaders = _.extend({}, exports.headers, headerParams);
+  res.writeHead(statusCode, finalHeaders);
   res.end(data);
 };
 
@@ -38,8 +40,15 @@ exports.serveAssets = function(resp, asset, callback) {
   // Write some code here that helps serve up your static files!
   // (Static files are things like html (yours or archived from others...),
   // css, or anything that doesn't change often.)
+  var assetArr = asset.split('.');
+  var filetype = assetArr[assetArr.length - 1];
+
   fs.readFile(asset, function(err, data) {
-    exports.sendResponse(resp, data);
+    var headerParams = {};
+    if(filetype === 'css') {
+      headerParams['Content-Type'] = 'text/css';
+    }
+    exports.sendResponse(resp, data, 200, headerParams);
   });
 
 };

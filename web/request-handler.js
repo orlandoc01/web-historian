@@ -14,6 +14,9 @@ var rootActions = {
     if (route === '/') {
        asset = path.join(archive.paths.siteAssets,'/index.html');
        httpHelpers.serveAssets(resp, asset);
+    } else if(route === '/styles.css') {
+      asset = path.join(archive.paths.siteAssets, '/styles.css');
+      httpHelpers.serveAssets(resp, asset);
     } else {
       var cachedFile = route.slice(1);
       archive.isUrlArchived(cachedFile, function(found) {
@@ -44,7 +47,6 @@ var rootActions = {
           });
         } else {
           archive.addUrlToList(newURL, function() {
-            console.log('added to list');
             httpHelpers.sendResponse(resp, 'Added', 302);
           });
         }
