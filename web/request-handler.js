@@ -6,14 +6,6 @@ var url = require('url');
 // require more modules/folders here!
 
 
-//function which maps url to local file
-var routeUrl = function(request) {
- 
-};
-
-
-
-
 //requests to '/'
 var rootActions = {
   'GET': function(req, resp) {
@@ -45,7 +37,7 @@ var rootActions = {
             if (archived) {
               asset = path.join(archive.paths.archivedSites, newURL);              
             } else {
-              asset = path.join(archive.paths.siteAssets,'/loading.htm');
+              asset = path.join(archive.paths.siteAssets,'/loading.html');
             }
             httpHelpers.serveAssets(resp, asset);
           

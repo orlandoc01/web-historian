@@ -79,6 +79,7 @@ exports.downloadUrls = function(urlArray) {
         });
 
         response.on('end', function() {
+          console.log(body);
           fs.write(fd, body, 0, 'utf8');
         });
 
