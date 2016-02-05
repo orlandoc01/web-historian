@@ -31,15 +31,14 @@ exports.initialize = function(pathsObj) {
 // The following function names are provided to you to suggest how you might
 // modularize your code. Keep it clean!
 
-exports.readListOfUrls = function(callback) {
+exports.readListOfUrls = function() {
   return fs.readFileAsync(exports.paths.list, 'utf8')
-  .then( function(data) {
-    callback(data.split('\n'));
-  })
-  .catch(function(err) {
-    console.log("could not read list of urls");
-  });
-
+      .then( function(text) {
+          return text.split('\n');
+      })
+      .catch( function(err) {
+        console.log("Could not open file");
+      });
 
   // fs.readFile(exports.paths.list, 'utf8', function(err, data) {
   //   var arr = data.split('\n');
@@ -47,10 +46,14 @@ exports.readListOfUrls = function(callback) {
   // });
 };
 
-exports.isUrlInList = function(target, callback) {
-  exports.readListOfUrls(function(urls) {
-    callback(urls.indexOf(target) !== -1);
-  });
+exports.isUrlInList = function(target) {
+  return exports.readListOfUrls()
+    .then(function(urls) {
+      return (urls.indexOf(target) !== -1);
+    });
+  // exports.readListOfUrls(function(urls) {
+  //   callback(urls.indexOf(target) !== -1);
+  // });
 };
 
 exports.addUrlToList = function(newUrl, callback) {

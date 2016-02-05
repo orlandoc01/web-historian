@@ -5,6 +5,7 @@ var archive = require("../helpers/archive-helpers");
 var path = require('path');
 var supertest = require('supertest');
 var initialize = require("../web/initialize.js");
+var Promise = require('bluebird');
 
 initialize(path.join(__dirname, '/testdata'));
 
@@ -82,9 +83,10 @@ describe("archive helpers", function(){
       var urlArray = ["example1.com", "example2.com"];
       fs.writeFileSync(archive.paths.list, urlArray.join("\n"));
 
-      archive.readListOfUrls(function(urls){
-        expect(urls).to.deep.equal(urlArray);
-        done();
+      archive.readListOfUrls()
+        .then( function (urls) {
+          expect(urls).to.deep.equal(urlArray);
+          done();
       });
     });
   });
@@ -97,12 +99,14 @@ describe("archive helpers", function(){
       var counter = 0;
       var total = 2;
 
-      archive.isUrlInList("example1.com", function (is) {
+      archive.isUrlInList("example1.com")
+      .then( function (is) {
         expect(is);
         if (++counter == total) { done() }
       });
 
-      archive.isUrlInList("gibberish", function (is) {
+      archive.isUrlInList("gibberish")
+      .then(function (is) {
         expect(!is);
         if (++counter == total) { done() }
       });
