@@ -56,10 +56,10 @@ exports.isUrlInList = function(target) {
   // });
 };
 
-exports.addUrlToList = function(newUrl, callback) {
-  fs.appendFile(exports.paths.list, newUrl + "\n", function(err) {
+exports.addUrlToList = function(newUrl) {
+  return fs.appendFileAsync(exports.paths.list, newUrl + "\n")
+  .catch( function(err) {
     if (err) throw err;
-    callback();
   });
 };
 

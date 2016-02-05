@@ -118,8 +118,10 @@ describe("archive helpers", function(){
       var urlArray = ["example1.com", "example2.com\n"];
       fs.writeFileSync(archive.paths.list, urlArray.join("\n"));
 
-      archive.addUrlToList("someurl.com", function () {
-        archive.isUrlInList("someurl.com", function (is) {
+      archive.addUrlToList("someurl.com")
+      .then(function () {
+        archive.isUrlInList("someurl.com")
+        .then(function (is) {
           expect(is);
           done();
         });
